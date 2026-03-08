@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Booking – Minto Holidays</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<header id="hdr">
+  <div class="nav">
+    <div class="logo"><i class="fas fa-plane-departure"></i> Minto Holidays</div>
+    <button class="ham" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <nav class="menu" id="menu">
+      <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <a href="hotels.html"><i class="fas fa-hotel"></i> Hotels</a>
+      <a href="flights.html" class="active"><i class="fas fa-plane"></i> Flights</a>
+      <a href="trains.html"><i class="fas fa-train"></i> Trains</a>
+      <a href="book.html"><i class="fas fa-ticket-alt"></i> Book Tour</a>
+      <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+      <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+    </nav>
+  </div>
+</header>
+<div class="pg-head" style="background:linear-gradient(135deg,#1a237e,#283593)"><h1><i class="fas fa-plane"></i> Flight Booking</h1><p>Cheapest fares on domestic &amp; international flights</p></div>
+<section style="padding:35px 20px;background:#f8f9fa">
+  <div style="max-width:1100px;margin:auto;background:#fff;border-radius:14px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,.1)">
+    <div class="trip-row" style="margin-bottom:14px">
+      <label><input type="radio" name="ftrip" value="one" checked onchange="toggleRet(this)"> One Way</label>
+      <label><input type="radio" name="ftrip" value="round" onchange="toggleRet(this)"> Round Trip</label>
+      <label><input type="radio" name="ftrip" value="multi" onchange="toggleRet(this)"> Multi City</label>
+    </div>
+    <div class="frow">
+      <div class="fg" style="flex:2"><label>From</label><input type="text" id="ff" placeholder="City (e.g. Delhi DEL)"></div>
+      <div class="fg-swap"><button class="swap-btn" onclick="swapFlights()"><i class="fas fa-exchange-alt"></i></button></div>
+      <div class="fg" style="flex:2"><label>To</label><input type="text" id="ft" placeholder="City (e.g. Mumbai BOM)"></div>
+      <div class="fg"><label>Departure</label><input type="date" id="fd"></div>
+      <div class="fg" id="retGrp" style="display:none"><label>Return</label><input type="date" id="fr"></div>
+      <div class="fg"><label>Class</label><select id="fc"><option>Economy</option><option>Business</option><option>First Class</option></select></div>
+      <div class="fg"><label>Travellers</label><select><option>1 Adult</option><option>2 Adults</option><option>3 Adults</option><option>2A+1 Child</option></select></div>
+      <div class="fg"><button class="sbtn" onclick="doSearchF()"><i class="fas fa-search"></i> Search Flights</button></div>
+    </div>
+  </div>
+</section>
+<div id="results-area" style="max-width:900px;margin:0 auto;padding:0 20px"></div>
+<section>
+  <div class="container">
+    <div class="sec-head"><span class="sec-tag">Popular</span><h2>Popular Routes</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px">
+      <div class="f-card" onclick="prefillF('Delhi (DEL)','Mumbai (BOM)')"><div class="f-route"><div class="f-city"><strong>DEL</strong><small>Delhi</small></div><div class="f-arrow">✈️</div><div class="f-city"><strong>BOM</strong><small>Mumbai</small></div></div><div style="text-align:right"><div class="res-price">₹2,499</div><small style="color:#888">2h 15m</small></div></div>
+      <div class="f-card" onclick="prefillF('Delhi (DEL)','Goa (GOI)')"><div class="f-route"><div class="f-city"><strong>DEL</strong><small>Delhi</small></div><div class="f-arrow">✈️</div><div class="f-city"><strong>GOI</strong><small>Goa</small></div></div><div style="text-align:right"><div class="res-price">₹2,899</div><small style="color:#888">2h 45m</small></div></div>
+      <div class="f-card" onclick="prefillF('Mumbai (BOM)','Bengaluru (BLR)')"><div class="f-route"><div class="f-city"><strong>BOM</strong><small>Mumbai</small></div><div class="f-arrow">✈️</div><div class="f-city"><strong>BLR</strong><small>Bengaluru</small></div></div><div style="text-align:right"><div class="res-price">₹1,899</div><small style="color:#888">1h 50m</small></div></div>
+      <div class="f-card" onclick="prefillF('Delhi (DEL)','Bangkok (BKK)')"><div class="f-route"><div class="f-city"><strong>DEL</strong><small>Delhi</small></div><div class="f-arrow">✈️</div><div class="f-city"><strong>BKK</strong><small>Bangkok</small></div></div><div style="text-align:right"><div class="res-price">₹9,999</div><small style="color:#888">4h 30m</small></div></div>
+      <div class="f-card" onclick="prefillF('Mumbai (BOM)','Dubai (DXB)')"><div class="f-route"><div class="f-city"><strong>BOM</strong><small>Mumbai</small></div><div class="f-arrow">✈️</div><div class="f-city"><strong>DXB</strong><small>Dubai</small></div></div><div style="text-align:right"><div class="res-price">₹12,499</div><small style="color:#888">3h 10m</small></div></div>
+      <div class="f-card" onclick="prefillF('Delhi (DEL)','Srinagar (SXR)')"><div class="f-route"><div class="f-city"><strong>DEL</strong><small>Delhi</small></div><div class="f-arrow">✈️</div><div class="f-city"><strong>SXR</strong><small>Srinagar</small></div></div><div style="text-align:right"><div class="res-price">₹3,499</div><small style="color:#888">1h 30m</small></div></div>
+    </div>
+  </div>
+</section>
+<div class="modal" id="fModal">
+  <div class="modal-box" style="max-width:480px">
+    <button class="modal-close" onclick="document.getElementById('fModal').classList.remove('show')"><i class="fas fa-times"></i></button>
+    <h3 id="fModalTitle">✈️ Book Flight</h3>
+    <div id="fForm"><div class="mform">
+      <input type="text" id="fm-name" placeholder="Full Name *">
+      <input type="email" id="fm-email" placeholder="Email Address">
+      <input type="tel" id="fm-phone" placeholder="Mobile Number *">
+      <input type="hidden" id="fm-detail">
+      <button class="sbtn" onclick="submitFlight()">✅ Confirm Flight Booking</button>
+    </div></div>
+    <div id="fSuccess" style="display:none;text-align:center;padding:25px"><div style="font-size:55px;margin-bottom:14px">✈️</div><h3 style="color:#1565c0;margin-bottom:8px">Flight Booked!</h3><p>Ticket details will be emailed within 30 minutes.</p></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<footer><div class="foot-bot">© 2025 Minto Holidays | All Rights Reserved</div></footer>
+<script src="js/main.js"></script>
+<script>
+function toggleRet(r){const g=document.getElementById('retGrp');if(g)g.style.display=r.value==='round'?'block':'none';}
+function prefillF(f,t){document.getElementById('ff').value=f;document.getElementById('ft').value=t;window.scrollTo({top:0,behavior:'smooth'});}
+function doSearchF(){
+  const fr=document.getElementById('ff').value,to=document.getElementById('ft').value,dt=document.getElementById('fd').value,cl=document.getElementById('fc').value;
+  if(!fr||!to){toast('Please enter departure and destination','e');return;}
+  if(!dt){toast('Please select a date','e');return;}
+  const al=[{n:'IndiGo 6E-124',dep:'06:00',arr:'08:15',dur:'2h 15m',p:'₹3,249',st:'Non-Stop'},{n:'Air India AI-864',dep:'08:30',arr:'10:50',dur:'2h 20m',p:'₹3,849',st:'Non-Stop'},{n:'SpiceJet SG-117',dep:'11:00',arr:'13:30',dur:'2h 30m',p:'₹2,899',st:'Non-Stop'},{n:'Vistara UK-812',dep:'14:45',arr:'17:05',dur:'2h 20m',p:'₹4,499',st:'Non-Stop'},{n:'GoAir G8-219',dep:'18:00',arr:'21:30',dur:'3h 30m',p:'₹2,349',st:'1 Stop'}];
+  let h=`<h3 style="margin-bottom:16px">✈️ ${fr} → ${to} | ${dt} | ${cl}</h3>`;
+  al.forEach(a=>{h+=`<div class="f-card" style="margin-bottom:14px"><div><h4>✈️ ${a.n}</h4><p class="f-det">${a.dep} → ${a.arr} | ${a.dur} | <span class="avail">${a.st}</span></p></div><div style="text-align:right"><div class="res-price">${a.p}</div><small style="color:#888">per person</small><br><button class="bk-btn" style="margin-top:8px" onclick="openFlight('${a.n} | ${fr} to ${to}')">Book Now</button></div></div>`;});
+  const ra=document.getElementById('results-area');
+  ra.innerHTML=`<div style="background:#fff;border-radius:14px;padding:24px;margin:20px 0;box-shadow:0 8px 30px rgba(0,0,0,.1)">${h}</div>`;
+  ra.scrollIntoView({behavior:'smooth'});
+}
+function openFlight(det){document.getElementById('fm-detail').value=det;document.getElementById('fModalTitle').textContent='✈️ '+det;document.getElementById('fForm').style.display='block';document.getElementById('fSuccess').style.display='none';document.getElementById('fModal').classList.add('show');}
+async function submitFlight(){
+  const n=document.getElementById('fm-name').value,p=document.getElementById('fm-phone').value;
+  if(!n||!p){toast('Please fill name and mobile number','e');return;}
+  const det=document.getElementById('fm-detail').value.split('|');
+  try{await fetch('/api/book-flight',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,email:document.getElementById('fm-email').value,phone:p,from_city:det[1]||'',to_city:det[2]||'',departure_date:document.getElementById('fd').value,class_type:document.getElementById('fc').value})});}catch(e){}
+  document.getElementById('fForm').style.display='none';document.getElementById('fSuccess').style.display='block';
+}
+</script>
+</body>
+</html>

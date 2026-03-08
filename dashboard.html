@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard – Minto Holidays</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body style="background:#f4f6f8;min-height:100vh;">
+
+<!-- Auth check -->
+<script>
+if(sessionStorage.getItem('minto_admin') !== 'yes'){
+  window.location.href = 'login.html';
+}
+</script>
+
+<div style="background:#1a1a2e;color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 15px rgba(0,0,0,.3)">
+  <div style="font-size:18px;font-weight:800;display:flex;align-items:center;gap:10px">
+    <i class="fas fa-plane-departure" style="color:#e91e63"></i> Minto Holidays &nbsp;<span style="font-size:13px;opacity:.7;font-weight:400">Admin Dashboard</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:15px">
+    <a href="../index.html" style="color:rgba(255,255,255,.7);font-size:13px;text-decoration:none"><i class="fas fa-external-link-alt"></i> View Website</a>
+    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </div>
+</div>
+
+<div class="admin-wrap">
+
+  <!-- STAT CARDS -->
+  <div class="stat-cards" id="statCards">
+    <div class="stat-card"><h3 id="s-tours">...</h3><p>Tour Bookings</p></div>
+    <div class="stat-card" style="border-top-color:#ff9800"><h3 id="s-hotels" style="color:#ff9800">...</h3><p>Hotel Bookings</p></div>
+    <div class="stat-card" style="border-top-color:#1565c0"><h3 id="s-flights" style="color:#1565c0">...</h3><p>Flight Bookings</p></div>
+    <div class="stat-card" style="border-top-color:#2e7d32"><h3 id="s-trains" style="color:#2e7d32">...</h3><p>Train Bookings</p></div>
+    <div class="stat-card" style="border-top-color:#7b1fa2"><h3 id="s-contacts" style="color:#7b1fa2">...</h3><p>Enquiries</p></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="admin-tabs">
+    <button class="adm-tab on" onclick="showAdminTab('tours')"><i class="fas fa-map-marked-alt"></i> Tour Bookings</button>
+    <button class="adm-tab" onclick="showAdminTab('hotels')"><i class="fas fa-hotel"></i> Hotel Bookings</button>
+    <button class="adm-tab" onclick="showAdminTab('flights')"><i class="fas fa-plane"></i> Flight Bookings</button>
+    <button class="adm-tab" onclick="showAdminTab('trains')"><i class="fas fa-train"></i> Train Bookings</button>
+    <button class="adm-tab" onclick="showAdminTab('contacts')"><i class="fas fa-envelope"></i> Enquiries</button>
+  </div>
+
+  <!-- DATA PANELS -->
+  <div id="panel-tours" class="adm-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="font-size:18px;font-weight:700">Tour Bookings</h3>
+      <button onclick="exportCSV('tours')" style="background:#e91e63;color:#fff;border:none;padding:8px 16px;border-radius:22px;cursor:pointer;font-size:13px;font-weight:600"><i class="fas fa-download"></i> Export CSV</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table" id="tbl-tours">
+        <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>Tour</th><th>Date</th><th>Persons</th><th>Message</th><th>Received</th></tr></thead>
+        <tbody id="body-tours"><tr><td colspan="9" class="empty-msg">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="panel-hotels" class="adm-panel" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="font-size:18px;font-weight:700">Hotel Bookings</h3>
+      <button onclick="exportCSV('hotels')" style="background:#ff9800;color:#fff;border:none;padding:8px 16px;border-radius:22px;cursor:pointer;font-size:13px;font-weight:600"><i class="fas fa-download"></i> Export CSV</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table" id="tbl-hotels">
+        <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>Hotel</th><th>City</th><th>Check-In</th><th>Check-Out</th><th>Room Type</th><th>Received</th></tr></thead>
+        <tbody id="body-hotels"><tr><td colspan="10" class="empty-msg">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="panel-flights" class="adm-panel" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="font-size:18px;font-weight:700">Flight Bookings</h3>
+      <button onclick="exportCSV('flights')" style="background:#1565c0;color:#fff;border:none;padding:8px 16px;border-radius:22px;cursor:pointer;font-size:13px;font-weight:600"><i class="fas fa-download"></i> Export CSV</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table" id="tbl-flights">
+        <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>From</th><th>To</th><th>Date</th><th>Class</th><th>Received</th></tr></thead>
+        <tbody id="body-flights"><tr><td colspan="9" class="empty-msg">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="panel-trains" class="adm-panel" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="font-size:18px;font-weight:700">Train Bookings</h3>
+      <button onclick="exportCSV('trains')" style="background:#2e7d32;color:#fff;border:none;padding:8px 16px;border-radius:22px;cursor:pointer;font-size:13px;font-weight:600"><i class="fas fa-download"></i> Export CSV</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table" id="tbl-trains">
+        <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>From</th><th>To</th><th>Train</th><th>Date</th><th>Class</th><th>Received</th></tr></thead>
+        <tbody id="body-trains"><tr><td colspan="10" class="empty-msg">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="panel-contacts" class="adm-panel" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="font-size:18px;font-weight:700">Enquiries / Contact Messages</h3>
+      <button onclick="exportCSV('contacts')" style="background:#7b1fa2;color:#fff;border:none;padding:8px 16px;border-radius:22px;cursor:pointer;font-size:13px;font-weight:600"><i class="fas fa-download"></i> Export CSV</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table" id="tbl-contacts">
+        <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>Subject</th><th>Message</th><th>Received</th></tr></thead>
+        <tbody id="body-contacts"><tr><td colspan="7" class="empty-msg">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let allData = {tours:[],hotels:[],flights:[],trains:[],contacts:[]};
+
+function logout(){
+  sessionStorage.removeItem('minto_admin');
+  window.location.href = 'login.html';
+}
+
+function showAdminTab(name){
+  document.querySelectorAll('.adm-panel').forEach(p => p.style.display='none');
+  document.querySelectorAll('.adm-tab').forEach(b => b.classList.remove('on'));
+  document.getElementById('panel-'+name).style.display = 'block';
+  const idx = {tours:0,hotels:1,flights:2,trains:3,contacts:4}[name];
+  document.querySelectorAll('.adm-tab')[idx].classList.add('on');
+}
+
+function fmt(dt){ if(!dt) return '–'; try{ return new Date(dt).toLocaleString('en-IN'); }catch(e){ return dt; } }
+function v(x){ return x||'–'; }
+
+async function loadData(){
+  try{
+    const r = await fetch('/api/admin/data');
+    if(!r.ok) throw new Error();
+    const d = await r.json();
+    allData = d;
+    renderAll(d);
+  }catch(e){
+    // Demo mode – show empty tables with message
+    renderAll({tours:[],hotels:[],flights:[],trains:[],contacts:[]});
+    document.querySelectorAll('.empty-msg').forEach(el => el.textContent = '📭 No bookings yet. When customers book, data will appear here.');
+  }
+}
+
+function renderAll(d){
+  document.getElementById('s-tours').textContent    = d.tours?.length    || 0;
+  document.getElementById('s-hotels').textContent   = d.hotels?.length   || 0;
+  document.getElementById('s-flights').textContent  = d.flights?.length  || 0;
+  document.getElementById('s-trains').textContent   = d.trains?.length   || 0;
+  document.getElementById('s-contacts').textContent = d.contacts?.length || 0;
+
+  const rb = (id, rows) => {
+    const b = document.getElementById(id);
+    if(!rows||!rows.length){ b.innerHTML='<tr><td colspan="20" class="empty-msg">📭 No records yet</td></tr>'; return; }
+    b.innerHTML = rows.map((r,i) => buildRow(id,r,i)).join('');
+  };
+
+  rb('body-tours',    d.tours);
+  rb('body-hotels',   d.hotels);
+  rb('body-flights',  d.flights);
+  rb('body-trains',   d.trains);
+  rb('body-contacts', d.contacts);
+}
+
+function buildRow(tableId, r, i){
+  const n = i+1;
+  if(tableId==='body-tours')
+    return `<tr><td>${n}</td><td><strong>${v(r.name)}</strong></td><td>${v(r.phone)}</td><td>${v(r.email)}</td><td>${v(r.tour)}</td><td>${v(r.travel_date)}</td><td>${v(r.persons)}</td><td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${v(r.message)}</td><td>${fmt(r.created_at)}</td></tr>`;
+  if(tableId==='body-hotels')
+    return `<tr><td>${n}</td><td><strong>${v(r.name)}</strong></td><td>${v(r.phone)}</td><td>${v(r.email)}</td><td>${v(r.hotel_name)}</td><td>${v(r.city)}</td><td>${v(r.check_in)}</td><td>${v(r.check_out)}</td><td>${v(r.room_type)}</td><td>${fmt(r.created_at)}</td></tr>`;
+  if(tableId==='body-flights')
+    return `<tr><td>${n}</td><td><strong>${v(r.name)}</strong></td><td>${v(r.phone)}</td><td>${v(r.email)}</td><td>${v(r.from_city)}</td><td>${v(r.to_city)}</td><td>${v(r.departure_date)}</td><td>${v(r.class_type)}</td><td>${fmt(r.created_at)}</td></tr>`;
+  if(tableId==='body-trains')
+    return `<tr><td>${n}</td><td><strong>${v(r.name)}</strong></td><td>${v(r.phone)}</td><td>${v(r.email)}</td><td>${v(r.from_station)}</td><td>${v(r.to_station)}</td><td>${v(r.train_name)}</td><td>${v(r.travel_date)}</td><td>${v(r.class_type)}</td><td>${fmt(r.created_at)}</td></tr>`;
+  if(tableId==='body-contacts')
+    return `<tr><td>${n}</td><td><strong>${v(r.name)}</strong></td><td>${v(r.phone)}</td><td>${v(r.email)}</td><td>${v(r.subject)}</td><td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${v(r.message)}</td><td>${fmt(r.created_at)}</td></tr>`;
+  return '';
+}
+
+function exportCSV(type){
+  const data = allData[type]||[];
+  if(!data.length){ alert('No data to export yet.'); return; }
+  const keys = Object.keys(data[0]).filter(k=>k!=='_id');
+  const rows = [keys.join(','), ...data.map(r => keys.map(k=>`"${(r[k]||'').toString().replace(/"/g,'""')}"`).join(','))];
+  const blob = new Blob([rows.join('\n')], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `minto_${type}_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+}
+
+// Auto-refresh every 30 seconds
+loadData();
+setInterval(loadData, 30000);
+</script>
+</body>
+</html>
