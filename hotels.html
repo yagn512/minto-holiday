@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotel Booking – Minto Holidays</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<header id="hdr">
+  <div class="nav">
+    <div class="logo"><i class="fas fa-plane-departure"></i> Minto Holidays</div>
+    <button class="ham" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <nav class="menu" id="menu">
+      <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <a href="hotels.html" class="active"><i class="fas fa-hotel"></i> Hotels</a>
+      <a href="flights.html"><i class="fas fa-plane"></i> Flights</a>
+      <a href="trains.html"><i class="fas fa-train"></i> Trains</a>
+      <a href="book.html"><i class="fas fa-ticket-alt"></i> Book Tour</a>
+      <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+      <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+    </nav>
+  </div>
+</header>
+<div class="pg-head"><h1><i class="fas fa-hotel"></i> Hotel Booking</h1><p>Best deals on hotels across India &amp; worldwide</p></div>
+<section style="padding:35px 20px;background:#f8f9fa">
+  <div style="max-width:1000px;margin:auto;background:#fff;border-radius:14px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,.1)">
+    <div class="frow">
+      <div class="fg" style="flex:2"><label>City / Hotel Name</label><input type="text" id="hcity" placeholder="Delhi, Mumbai, Goa, Kashmir..."></div>
+      <div class="fg"><label>Check-In</label><input type="date" id="hci"></div>
+      <div class="fg"><label>Check-Out</label><input type="date" id="hco"></div>
+      <div class="fg"><label>Rooms</label><select id="hrooms"><option>1 Room</option><option>2 Rooms</option><option>3 Rooms</option></select></div>
+      <div class="fg"><label>Guests</label><select id="hguests"><option>1 Adult</option><option>2 Adults</option><option>2A + 1 Child</option><option>3 Adults</option></select></div>
+      <div class="fg"><button class="sbtn" onclick="searchHotels()"><i class="fas fa-search"></i> Search Hotels</button></div>
+    </div>
+  </div>
+</section>
+<div id="results-area" style="max-width:1000px;margin:0 auto;padding:0 20px"></div>
+<section>
+  <div class="container">
+    <div class="sec-head"><span class="sec-tag">Top Picks</span><h2>Popular Hotels</h2></div>
+    <div class="h-grid">
+      <div class="h-card"><img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=600&q=80" alt="Hotel"><div class="h-info"><h3>The Leela Palace, Delhi</h3><p class="h-loc">📍 New Delhi</p><p class="h-amn">Pool · Spa · Fine Dining · Gym · Free WiFi</p><div class="h-foot"><div class="h-stars">★★★★★</div><div class="h-price">₹12,500<small>/night</small></div></div><button class="bk-btn" style="width:100%;margin-top:12px" onclick="openHotel('The Leela Palace, Delhi','₹12,500/night')">Book Now</button></div></div>
+      <div class="h-card"><img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80" alt="Hotel"><div class="h-info"><h3>Taj Mahal Palace, Mumbai</h3><p class="h-loc">📍 Mumbai</p><p class="h-amn">Sea View · Pool · Spa · Restaurant · Bar</p><div class="h-foot"><div class="h-stars">★★★★★</div><div class="h-price">₹15,800<small>/night</small></div></div><button class="bk-btn" style="width:100%;margin-top:12px" onclick="openHotel('Taj Mahal Palace, Mumbai','₹15,800/night')">Book Now</button></div></div>
+      <div class="h-card"><img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80" alt="Hotel"><div class="h-info"><h3>Goa Marriott Resort</h3><p class="h-loc">📍 Panaji, Goa</p><p class="h-amn">Beach Front · Pool · Water Sports · Bar</p><div class="h-foot"><div class="h-stars">★★★★★</div><div class="h-price">₹9,200<small>/night</small></div></div><button class="bk-btn" style="width:100%;margin-top:12px" onclick="openHotel('Goa Marriott Resort','₹9,200/night')">Book Now</button></div></div>
+      <div class="h-card"><img src="kashmir2.jpg" alt="Kashmir Hotel"><div class="h-info"><h3>Kashmir Houseboat Resort</h3><p class="h-loc">📍 Srinagar, Kashmir</p><p class="h-amn">Dal Lake View · Heritage · Breakfast Included</p><div class="h-foot"><div class="h-stars">★★★★</div><div class="h-price">₹5,500<small>/night</small></div></div><button class="bk-btn" style="width:100%;margin-top:12px" onclick="openHotel('Kashmir Houseboat Resort','₹5,500/night')">Book Now</button></div></div>
+      <div class="h-card"><img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=600&q=80" alt="Jaipur"><div class="h-info"><h3>Jaipur Heritage Haveli</h3><p class="h-loc">📍 Jaipur, Rajasthan</p><p class="h-amn">Heritage · Pool · Desert Safari · Restaurant</p><div class="h-foot"><div class="h-stars">★★★★</div><div class="h-price">₹4,800<small>/night</small></div></div><button class="bk-btn" style="width:100%;margin-top:12px" onclick="openHotel('Jaipur Heritage Haveli','₹4,800/night')">Book Now</button></div></div>
+      <div class="h-card"><img src="uttarakhand.jpg" alt="Manali"><div class="h-info"><h3>Manali Snowflake Resort</h3><p class="h-loc">📍 Manali, Himachal Pradesh</p><p class="h-amn">Mountain View · Bonfire · Adventure Sports</p><div class="h-foot"><div class="h-stars">★★★★</div><div class="h-price">₹3,200<small>/night</small></div></div><button class="bk-btn" style="width:100%;margin-top:12px" onclick="openHotel('Manali Snowflake Resort','₹3,200/night')">Book Now</button></div></div>
+    </div>
+  </div>
+</section>
+<div class="modal" id="hModal">
+  <div class="modal-box" style="max-width:500px">
+    <button class="modal-close" onclick="document.getElementById('hModal').classList.remove('show')"><i class="fas fa-times"></i></button>
+    <h3 id="hModalTitle">Book Hotel</h3>
+    <div id="hForm"><div class="mform">
+      <input type="text" id="hm-name" placeholder="Full Name *">
+      <input type="email" id="hm-email" placeholder="Email Address">
+      <input type="tel" id="hm-phone" placeholder="Mobile Number *">
+      <input type="date" id="hm-ci" placeholder="Check-In">
+      <input type="date" id="hm-co" placeholder="Check-Out">
+      <select id="hm-type"><option>Standard Room</option><option>Deluxe Room</option><option>Suite</option><option>Presidential Suite</option></select>
+      <input type="hidden" id="hm-hotel">
+      <button class="sbtn" onclick="submitHotel()">✅ Confirm Hotel Booking</button>
+    </div></div>
+    <div id="hSuccess" style="display:none;text-align:center;padding:25px"><div style="font-size:55px;margin-bottom:14px">🏨</div><h3 style="color:#2e7d32;margin-bottom:8px">Booking Confirmed!</h3><p>Our team will contact you within 2 hours.</p></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<footer><div class="foot-bot">© 2025 Minto Holidays | All Rights Reserved</div></footer>
+<script src="main.js"></script>
+<script>
+function searchHotels(){
+  const city=document.getElementById('hcity').value,ci=document.getElementById('hci').value,co=document.getElementById('hco').value;
+  if(!city){toast('Please enter a city','e');return;}
+  if(!ci||!co){toast('Please select check-in and check-out dates','e');return;}
+  const list=[{n:`Grand ${city} Hotel`,r:'★★★★★',p:'₹4,500/night',am:'Free WiFi · Pool · Breakfast · Spa'},{n:`${city} Comfort Inn`,r:'★★★★',p:'₹2,800/night',am:'Free WiFi · Restaurant · Parking'},{n:`Budget Stay ${city}`,r:'★★★',p:'₹1,200/night',am:'Free WiFi · AC · 24hr Reception'},{n:`${city} Palace Resort`,r:'★★★★★',p:'₹8,200/night',am:'Pool · Spa · Fine Dining · Gym'},{n:`City Center ${city}`,r:'★★★★',p:'₹3,100/night',am:'Rooftop · Bar · Parking'}];
+  let h=`<h3 style="margin-bottom:16px">🏨 Hotels in ${city} (${ci} → ${co})</h3><div class="res-list">`;
+  list.forEach(i=>{h+=`<div class="res-item" onclick="openHotel('${i.n}','${i.p}')"><div><h4>🏨 ${i.n}</h4><p>${i.r}</p><p style="font-size:12px;margin-top:3px">${i.am}</p></div><div style="text-align:right"><div class="res-price">${i.p}</div><span class="avail">Available</span></div></div>`;});
+  h+='</div>';
+  const ra=document.getElementById('results-area');
+  ra.innerHTML=`<div style="background:#fff;border-radius:14px;padding:24px;margin:20px 0;box-shadow:0 8px 30px rgba(0,0,0,.1)">${h}</div>`;
+  ra.scrollIntoView({behavior:'smooth'});
+}
+function openHotel(name,price){
+  document.getElementById('hm-hotel').value=name;
+  document.getElementById('hModalTitle').textContent='Book: '+name+' – '+price;
+  document.getElementById('hForm').style.display='block';
+  document.getElementById('hSuccess').style.display='none';
+  document.getElementById('hModal').classList.add('show');
+}
+async function submitHotel(){
+  const n=document.getElementById('hm-name').value,p=document.getElementById('hm-phone').value;
+  if(!n||!p){toast('Please fill name and mobile number','e');return;}
+  try{await fetch('/api/book-hotel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,email:document.getElementById('hm-email').value,phone:p,hotel_name:document.getElementById('hm-hotel').value,check_in:document.getElementById('hm-ci').value,check_out:document.getElementById('hm-co').value,room_type:document.getElementById('hm-type').value,city:document.getElementById('hcity').value||''})});}catch(e){}
+  document.getElementById('hForm').style.display='none';
+  document.getElementById('hSuccess').style.display='block';
+}
+</script>
+</body>
+</html>
