@@ -16,7 +16,12 @@ ADMIN_PASSWORD = "minto2025"
 try:
     from pymongo import MongoClient
     MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/")
-    client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=3000)
+    client = MongoClient(
+        MONGO_URI,
+        tls=True,
+        tlsAllowInvalidCertificates=True,
+        serverSelectionTimeoutMS=5000
+    )
     client.server_info()
     db = client["minto_holidays_db"]
     print("✅ MongoDB connected!")
