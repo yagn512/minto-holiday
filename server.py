@@ -22,7 +22,7 @@ BACKUP_FILE = os.path.join(BASE_DIR, "backup_data.json")
 
 # ─── MONGODB SETUP ────────────────────────────────────────────────────────────
 
-MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/")
+MONGO_URI = os.environ.get("MONGO_URI", "mongodb+srv://mintouser:moMISa6voKbg j58F@cluster0.ls6dwkh.mongodb.net/minto_holidays_db?retryWrites=true&w=majority")
 
 db = None
 try:
