@@ -6,17 +6,6 @@ Site:   http://localhost:8000
 Admin:  http://localhost:8000/login.html
 Login:  minto / minto2025
 ==========================================
-
-MongoDB setup:
-  Local:  MONGO_URI = "mongodb://localhost:27017/"   (default)
-  Atlas:  MONGO_URI = "mongodb+srv://user:pass@cluster.mongodb.net/"
-
-  Set via environment variable:
-    Windows:  set MONGO_URI=mongodb+srv://...
-    Linux/Mac: export MONGO_URI=mongodb+srv://...
-
-Fallback: Agar MongoDB connect nahi hua toh data
-          backup_data.json file mein save hota rahega.
 """
 
 from http.server import HTTPServer, SimpleHTTPRequestHandler
@@ -26,7 +15,10 @@ from datetime import datetime
 
 ADMIN_USERNAME = "minto"
 ADMIN_PASSWORD = "minto2025"
-BACKUP_FILE    = os.path.join(os.path.dirname(os.path.abspath(__file__)), "backup_data.json")
+
+# ─── IMPORTANT: Script ki directory fix karo ─────────────────────────────────
+BASE_DIR    = os.path.dirname(os.path.abspath(__file__))
+BACKUP_FILE = os.path.join(BASE_DIR, "backup_data.json")
 
 # ─── MONGODB SETUP ────────────────────────────────────────────────────────────
 
@@ -36,7 +28,7 @@ db = None
 try:
     from pymongo import MongoClient
     client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=4000)
-    client.server_info()   # force connection check
+    client.server_info()
     db = client["minto_holidays_db"]
     print(f"✅ MongoDB connected!  ({MONGO_URI.split('@')[-1]})")
 except ImportError:
@@ -44,7 +36,6 @@ except ImportError:
     print("   Falling back to JSON backup file.")
 except Exception as e:
     print(f"⚠️  MongoDB connect failed: {e}")
-    print(f"   URI tried: {MONGO_URI}")
     print("   Falling back to JSON backup file.")
 
 # ─── JSON FALLBACK HELPERS ───────────────────────────────────────────────────
@@ -64,7 +55,6 @@ def _save_backup(data):
         json.dump(data, f, ensure_ascii=False, indent=2, default=str)
 
 def fallback_insert(collection, doc):
-    """Save doc to JSON backup file when MongoDB is unavailable."""
     data = _load_backup()
     if collection not in data:
         data[collection] = []
@@ -74,7 +64,6 @@ def fallback_insert(collection, doc):
     return doc["_id"]
 
 def fallback_all():
-    """Read all data from JSON backup."""
     return _load_backup()
 
 # ─── HTTP SERVER ──────────────────────────────────────────────────────────────
@@ -82,7 +71,7 @@ def fallback_all():
 class MintoServer(SimpleHTTPRequestHandler):
 
     def log_message(self, fmt, *args):
-        pass
+        pass   # Quiet mode — remove this line to see all requests
 
     def do_OPTIONS(self):
         self.send_response(200)
@@ -114,18 +103,15 @@ class MintoServer(SimpleHTTPRequestHandler):
         bid = "N/A"
 
         if db is not None:
-            # ── MongoDB ──
             try:
                 res = db[col].insert_one(body)
                 bid = str(res.inserted_id)
                 print(f"  💾 [mongo/{col}] #{bid[:8]}  {body.get('name','?')}  {body.get('phone','?')}")
             except Exception as e:
                 print(f"  ❌ MongoDB insert error: {e}")
-                # Even if mongo write fails mid-run, save to backup
                 bid = fallback_insert(col, body)
-                print(f"  💾 [backup/{col}] saved as fallback  id={bid}")
+                print(f"  💾 [backup/{col}] fallback  id={bid}")
         else:
-            # ── JSON fallback ──
             bid = fallback_insert(col, body)
             print(f"  💾 [backup/{col}] {body.get('name','?')}  {body.get('phone','?')}")
 
@@ -135,11 +121,15 @@ class MintoServer(SimpleHTTPRequestHandler):
     def do_GET(self):
         path = urlparse(self.path).path
 
+        # ── Admin data API ──
         if path == "/api/admin/data":
             if db is not None:
                 try:
                     def fetch(col):
-                        docs = list(db[col].find({}, {"_id": 0}).sort("created_at", -1).limit(500))
+                        # _id ko string mein convert karo — projection hatao
+                        docs = list(db[col].find().sort("created_at", -1).limit(500))
+                        for d in docs:
+                            d["_id"] = str(d["_id"])   # ObjectId → string
                         return docs
                     self._json({
                         "tours":    fetch("bookings"),
@@ -149,13 +139,12 @@ class MintoServer(SimpleHTTPRequestHandler):
                         "contacts": fetch("contacts"),
                     })
                 except Exception as e:
+                    print(f"  ❌ Admin data fetch error: {e}")
                     self._json({"error": str(e)}, 500)
             else:
-                # Serve from JSON backup
                 bk = fallback_all()
-                # Sort each list by created_at descending
                 for key in bk:
-                    bk[key] = sorted(bk[key], key=lambda x: x.get("created_at",""), reverse=True)
+                    bk[key] = sorted(bk[key], key=lambda x: x.get("created_at", ""), reverse=True)
                 self._json({
                     "tours":    bk.get("bookings", []),
                     "hotels":   bk.get("hotel_bookings", []),
@@ -165,8 +154,30 @@ class MintoServer(SimpleHTTPRequestHandler):
                 })
             return
 
-        if path == "/" or path == "":
-            self.path = "/index.html"
+        # ── Friendly URL aliases ──
+        aliases = {
+            "/":          "/index.html",
+            "":           "/index.html",
+            "/login":     "/login.html",
+            "/dashboard": "/dashboard.html",
+            "/admin":     "/dashboard.html",
+            "/book":      "/book.html",
+            "/contact":   "/contact.html",
+            "/about":     "/about.html",
+            "/hotels":    "/hotels.html",
+            "/flights":   "/flights.html",
+            "/trains":    "/trains.html",
+        }
+        if path in aliases:
+            self.path = aliases[path]
+
+        # ── File serve karo BASE_DIR se ──
+        # Agar file exist nahi karti toh 404 dikhao
+        file_path = os.path.join(BASE_DIR, self.path.lstrip("/").split("?")[0])
+        if not os.path.exists(file_path) and not os.path.isdir(file_path):
+            self._404()
+            return
+
         return SimpleHTTPRequestHandler.do_GET(self)
 
     def _json(self, data, code=200):
@@ -178,11 +189,22 @@ class MintoServer(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _404(self):
+        msg = b"<h1>404 - Page Not Found</h1><p>File missing. Check your HTML files are in the same folder as server.py</p>"
+        self.send_response(404)
+        self.send_header("Content-Type", "text/html")
+        self.send_header("Content-Length", len(msg))
+        self.end_headers()
+        self.wfile.write(msg)
+
 
 # ─── ENTRY POINT ──────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    # ✅ FIX: server.py jis folder mein hai, wahi se files serve hogi
+    os.chdir(BASE_DIR)
+    print(f"  📁 Serving files from: {BASE_DIR}")
+
     port   = int(os.environ.get("PORT", 8000))
     server = HTTPServer(("0.0.0.0", port), MintoServer)
 
@@ -196,12 +218,8 @@ if __name__ == "__main__":
     print(f"  Login    → minto  /  minto2025")
     print(f"  Storage  → {mode}")
     if db is None:
-        print(f"  Backup   → backup_data.json")
-    print(f"{'='*44}")
-    print(f"\n  To use MongoDB Atlas, set env variable:")
-    print(f"  Windows:   set MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/")
-    print(f"  Linux/Mac: export MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/")
-    print(f"\n  To install pymongo:  pip install pymongo\n")
+        print(f"  Backup   → {BACKUP_FILE}")
+    print(f"{'='*44}\n")
 
     try:
         server.serve_forever()
