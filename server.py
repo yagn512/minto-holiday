@@ -101,7 +101,7 @@ class MintoServer(SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    port = int(os.environ.get("PORT", 8000))
+    port = int(os.environ.get("PORT", 10000))
     server = HTTPServer(("0.0.0.0", port), MintoServer)
     print(f"\n{'='*40}")
     print(f"  🌴 MINTO HOLIDAYS SERVER")
