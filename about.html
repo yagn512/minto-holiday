@@ -6,8 +6,144 @@
 <title>About – Minto Holidays</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  /* OWNER CARD */
+  .owner-section {
+    background: linear-gradient(135deg, #fff 60%, #f0f6ff 100%);
+    border-radius: 24px;
+    padding: 40px;
+    margin: 0 0 50px 0;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .owner-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1a73e8, #0d47a1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 8px 30px rgba(26,115,232,0.3);
+    font-size: 60px;
+    color: #fff;
+  }
+  .owner-info { flex: 1; min-width: 200px; }
+  .owner-tag {
+    display: inline-block;
+    background: #e8f0fe;
+    color: #1a73e8;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .owner-info h2 {
+    font-size: 30px;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 4px;
+  }
+  .owner-title {
+    color: #1a73e8;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .owner-info p {
+    color: #555;
+    font-size: 15px;
+    line-height: 1.9;
+    margin-bottom: 20px;
+  }
+  .owner-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .owner-stat {
+    text-align: center;
+    background: #f8faff;
+    border-radius: 14px;
+    padding: 14px 8px;
+    border: 1px solid #e0e7ff;
+  }
+  .owner-stat .num {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1a73e8;
+    line-height: 1;
+  }
+  .owner-stat .lbl {
+    font-size: 11px;
+    color: #888;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .owner-contacts {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .owner-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1.5px solid #e0e7ff;
+    border-radius: 50px;
+    padding: 9px 16px;
+    font-size: 13px;
+    color: #333;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .owner-contact-item i { color: #1a73e8; font-size: 14px; }
+
+  /* MOBILE RESPONSIVE */
+  @media (max-width: 600px) {
+    .owner-section {
+      flex-direction: column;
+      padding: 28px 18px;
+      gap: 20px;
+      text-align: center;
+      align-items: center;
+    }
+    .owner-avatar {
+      width: 110px;
+      height: 110px;
+      font-size: 44px;
+    }
+    .owner-info h2 { font-size: 22px; }
+    .owner-title { font-size: 13px; }
+    .owner-info p { font-size: 14px; line-height: 1.7; }
+    .owner-stats {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .owner-contacts {
+      justify-content: center;
+      gap: 8px;
+    }
+    .owner-contact-item {
+      font-size: 12px;
+      padding: 8px 12px;
+    }
+  }
+</style>
 </head>
 <body>
+
 <header id="hdr">
   <div class="nav">
     <div class="logo"><i class="fas fa-plane-departure"></i> Minto Holidays</div>
@@ -22,6 +158,7 @@
     </nav>
   </div>
 </header>
+
 <div class="hero" style="height:50vh">
   <div class="slides">
     <div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1600&q=80')"></div>
@@ -32,27 +169,62 @@
   <div class="hero-txt"><h1>About <em>Minto Holidays</em></h1><p>Trusted Travel Partner Since 2010</p></div>
   <div class="dots" id="dots"></div>
 </div>
+
 <section>
   <div class="container">
+
+    <!-- ① FOUNDER & OWNER — PEHLE -->
+    <div class="sec-head"><span class="sec-tag">Leadership</span><h2>Meet Our Owner</h2></div>
+    <div class="owner-section">
+      <div class="owner-avatar">
+        <i class="fas fa-user-tie"></i>
+      </div>
+      <div class="owner-info">
+        <span class="owner-tag">Founder &amp; Owner</span>
+        <h2>Yagn Patel</h2>
+        <div class="owner-title">Founder &amp; Managing Director – Minto Holidays</div>
+        <p>
+          Yagn Patel is the visionary founder behind Minto Holidays. With over a decade of experience in the travel and tourism industry, he has built Minto Holidays into a trusted name for domestic and international travel. His passion for exploring new destinations and his commitment to delivering exceptional travel experiences have been the driving force behind the company's growth since 2010.
+        </p>
+        <div class="owner-stats">
+          <div class="owner-stat"><div class="num">15+</div><div class="lbl">Years Exp.</div></div>
+          <div class="owner-stat"><div class="num">50K+</div><div class="lbl">Happy Clients</div></div>
+          <div class="owner-stat"><div class="num">4</div><div class="lbl">Offices</div></div>
+          <div class="owner-stat"><div class="num">200+</div><div class="lbl">Destinations</div></div>
+        </div>
+        <div class="owner-contacts">
+          <div class="owner-contact-item"><i class="fas fa-phone"></i> +91 7990300617</div>
+          <div class="owner-contact-item"><i class="fas fa-envelope"></i> yagnpatel18@gmail.com</div>
+          <div class="owner-contact-item"><i class="fas fa-map-marker-alt"></i> New Delhi, India</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② WHO WE ARE — BAAD MEIN -->
     <div class="sec-head"><span class="sec-tag">Who We Are</span><h2>About Minto Holidays</h2></div>
     <p style="text-align:center;max-width:800px;margin:0 auto 50px;font-size:16px;line-height:1.8;color:#555">Minto Holidays is an experienced Destination Management Company dealing in Domestic and International sectors. We deal in Holiday Packages, Hotel Booking, Air Ticketing and Train Tickets for destinations across India and worldwide.</p>
+
     <div class="srv-grid" style="margin-bottom:50px">
       <div class="srv"><div class="srv-ic"><i class="fas fa-hotel"></i></div><h3>1,38,000+ Hotels</h3><p>Best hotel options at budget-friendly pricing worldwide</p></div>
       <div class="srv"><div class="srv-ic"><i class="fas fa-rupee-sign"></i></div><h3>Best Price</h3><p>We guarantee the lowest prices vs other travel portals</p></div>
       <div class="srv"><div class="srv-ic"><i class="fas fa-headset"></i></div><h3>24x7 Support</h3><p>Our team assists you throughout your journey</p></div>
       <div class="srv"><div class="srv-ic"><i class="fas fa-shield-alt"></i></div><h3>Secure Payment</h3><p>Safe and secure online payment gateways</p></div>
     </div>
+
+    <!-- ③ OUR OFFICES -->
     <div style="background:var(--bg);padding:40px;border-radius:20px">
       <h2 style="font-size:24px;margin-bottom:22px">Our Offices</h2>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:25px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:25px">
         <div><h4>📍 Head Office – Delhi</h4><p style="color:#666;font-size:14px;margin-top:8px;line-height:1.7">Office No. 604-B, Jaina Tower-2<br>District Centre, Janakpuri<br>New Delhi – 110058</p></div>
         <div><h4>📍 Unjha Office</h4><p style="color:#666;font-size:14px;margin-top:8px;line-height:1.7">345-Third Floor, Avadh Viceroy<br>Sarthana, Unjha, Gujarat</p></div>
         <div><h4>📍 Manali Office</h4><p style="color:#666;font-size:14px;margin-top:8px;line-height:1.7">Aleo, Left Bank, New Manali<br>Kullu, Himachal Pradesh</p></div>
         <div><h4>📍 Pune Office</h4><p style="color:#666;font-size:14px;margin-top:8px;line-height:1.7">Apoorvai Hall, Narayan Peth<br>Pune, Maharashtra</p></div>
       </div>
     </div>
+
   </div>
 </section>
+
 <footer>
   <div class="foot-grid">
     <div><div class="foot-logo"><i class="fas fa-plane-departure"></i> Minto Holidays</div><p>Complete travel solutions for domestic &amp; international destinations.</p></div>
@@ -62,6 +234,7 @@
   </div>
   <div class="foot-bot">© 2025 Minto Holidays | All Rights Reserved</div>
 </footer>
+
 <div class="toast" id="toast"></div>
 <script src="main.js"></script>
 </body>
