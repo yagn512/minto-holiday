@@ -18,8 +18,8 @@
 ## 🔐 ADMIN PANEL
 
 **URL:** `http://localhost:8000/admin/login.html`  
-**Username:** `minto`  
-**Password:** `minto2025`
+**Username:**   
+**Password:**
 
 > To change password — open `server.py`, find lines:
 > `ADMIN_USERNAME = "minto"`
