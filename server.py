@@ -16,11 +16,10 @@ from datetime import datetime
 ADMIN_USERNAME = "minto"
 ADMIN_PASSWORD = "minto2025"
 
-# ─── IMPORTANT: Script ki directory fix karo ─────────────────────────────────
+
 BASE_DIR    = os.path.dirname(os.path.abspath(__file__))
 BACKUP_FILE = os.path.join(BASE_DIR, "backup_data.json")
 
-# ─── MONGODB SETUP ────────────────────────────────────────────────────────────
 
 MONGO_URI = os.environ.get("MONGO_URI", "mongodb+srv://mintouser:moMISa6voKbg j58F@cluster0.ls6dwkh.mongodb.net/minto_holidays_db?retryWrites=true&w=majority")
 
@@ -38,7 +37,6 @@ except Exception as e:
     print(f"⚠️  MongoDB connect failed: {e}")
     print("   Falling back to JSON backup file.")
 
-# ─── JSON FALLBACK HELPERS ───────────────────────────────────────────────────
 
 def _load_backup():
     if os.path.exists(BACKUP_FILE):
@@ -66,7 +64,6 @@ def fallback_insert(collection, doc):
 def fallback_all():
     return _load_backup()
 
-# ─── HTTP SERVER ──────────────────────────────────────────────────────────────
 
 class MintoServer(SimpleHTTPRequestHandler):
 
@@ -80,7 +77,7 @@ class MintoServer(SimpleHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
 
-    # ── POST ──────────────────────────────────────────────────────────────────
+
     def do_POST(self):
         path   = urlparse(self.path).path
         length = int(self.headers.get("Content-Length", 0))
@@ -117,11 +114,10 @@ class MintoServer(SimpleHTTPRequestHandler):
 
         self._json({"success": True, "message": msg, "booking_id": str(bid)})
 
-    # ── GET ───────────────────────────────────────────────────────────────────
     def do_GET(self):
         path = urlparse(self.path).path
 
-        # ── Admin data API ──
+      
         if path == "/api/admin/data":
             if db is not None:
                 try:
@@ -154,7 +150,7 @@ class MintoServer(SimpleHTTPRequestHandler):
                 })
             return
 
-        # ── Friendly URL aliases ──
+     
         aliases = {
             "/":          "/index.html",
             "":           "/index.html",
